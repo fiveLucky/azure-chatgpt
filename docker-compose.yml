@@ -1,32 +1,30 @@
 version: '3.9'
-
 services:
-  # ChatGPT Next Web service
-  chatgpt-next-web:
+  chatgpt-next-web: 
+    profiles: ["no-proxy"]
     container_name: chatgpt-next-web
-    image: yidadaa/chatgpt-next-web:latest
+    image: yidadaa/chatgpt-next-web
     ports:
       - 3000:3000
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - BASE_URL=http://azure-openai-proxy:3000
-    depends_on:
-      - azure-openai-proxy
-    networks:
-      - vnet
-    restart: unless-stopped
+      - OPENAI_API_KEY=$OPENAI_API_KEY
+      - CODE=$CODE
+      - BASE_URL=$BASE_URL
+      - OPENAI_ORG_ID=$OPENAI_ORG_ID
+      - HIDE_USER_API_KEY=$HIDE_USER_API_KEY
+      - DISABLE_GPT4=$DISABLE_GPT4
 
-  # Azure OpenAI Proxy service
-  azure-openai-proxy:
-    container_name: azure-openai-proxy
-    build:
-      context: ../..
-      dockerfile: Dockerfile
-    networks:
-      - vnet
-    restart: unless-stopped
-
-# Networks configuration
-networks:
-  vnet:
-    driver: bridge
+  chatgpt-next-web-proxy: 
+    profiles: ["proxy"]
+    container_name: chatgpt-next-web-proxy
+    image: yidadaa/chatgpt-next-web
+    ports:
+      - 3000:3000
+    environment:
+      - OPENAI_API_KEY=$OPENAI_API_KEY
+      - CODE=$CODE
+      - PROXY_URL=$PROXY_URL
+      - BASE_URL=$BASE_URL
+      - OPENAI_ORG_ID=$OPENAI_ORG_ID
+      - HIDE_USER_API_KEY=$HIDE_USER_API_KEY
+      - DISABLE_GPT4=$DISABLE_GPT4

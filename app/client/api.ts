@@ -128,6 +128,7 @@ export const api = new ClientApi();
 export function getHeaders() {
   const accessStore = useAccessStore.getState();
   let headers: Record<string, string> = {
+    "api-key": accessStore.token.trim(),
     "Content-Type": "application/json",
     "x-requested-with": "XMLHttpRequest",
   };
